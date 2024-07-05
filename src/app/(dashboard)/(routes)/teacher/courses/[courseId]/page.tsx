@@ -1,13 +1,15 @@
 import IconBadge from "@/components/IconBadge";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { LayoutDashboard } from "lucide-react";
+import { CircleDollarSign, File, LayoutDashboard, ListChecks } from "lucide-react";
 import { redirect } from "next/navigation";
 import React from "react";
 import TitleForm from "./_components/TitleForm";
 import DescriptionForm from "./_components/DescriptionForm";
 import ImageForm from "./_components/ImageForm";
 import CategoryForm from "./_components/CategoryForm";
+import PriceForm from "./_components/PriceForm";
+import AttachmentForm from "./_components/AttachmentForm";
 
 const CoursePage = async ({ params }: { params: { courseId: string } }) => {
   const { userId } = auth();
@@ -18,6 +20,13 @@ const CoursePage = async ({ params }: { params: { courseId: string } }) => {
       id: params.courseId,
       userId,
     },
+    include: {
+      attachments: {
+        orderBy: {
+          createdAt: "desc"
+        }
+      }
+    }
   });
 
   const categories = await db.category.findMany({
@@ -36,10 +45,10 @@ const CoursePage = async ({ params }: { params: { courseId: string } }) => {
     course.categoryId,
   ];
 
-  console.log(categories.map((category) => ({
-    label: category.name,
-    value: category.id,
-  })))
+  // console.log("cat", categories.map((category) => ({
+  //   label: category.name,
+  //   value: category.id,
+  // })))
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
 
@@ -72,6 +81,29 @@ const CoursePage = async ({ params }: { params: { courseId: string } }) => {
               value: category.id,
             }))}
           />
+        </div>
+        <div className="space-y-6">
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={ListChecks} />
+              <h2 className="text-xl">Course chapters</h2>
+            </div>
+            <div>todo chapters</div>
+          </div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={CircleDollarSign} />
+              <h2 className="text-xl">Sell your course</h2>
+            </div>
+            <PriceForm courseId={course.id} initialData={course} />
+          </div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={File} />
+              <h2 className="text-xl">Course Attachments</h2>
+            </div>
+            <AttachmentForm courseId={course.id} initialData={course}/>
+          </div>
         </div>
       </div>
     </div>

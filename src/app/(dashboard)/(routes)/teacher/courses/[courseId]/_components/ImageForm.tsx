@@ -35,7 +35,7 @@ const ImageForm = ({ initialData, courseId }: IProps) => {
     try {
       const response = await axios.patch(`/api/courses/${courseId}`, values);
       toggleEdit();
-      toast.success("Course created");
+      toast.success("Image update Successful");
       router.refresh();
     } catch {
       toast.error("something went wrong.");

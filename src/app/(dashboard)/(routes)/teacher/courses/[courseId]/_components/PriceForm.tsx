@@ -1,37 +1,38 @@
 "use client";
 import { Course } from "@prisma/client";
-import { useState } from "react";
+import React, { useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import * as z from "zod";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
 } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
-import Combobox  from "@/components/ui/combobox";
-import { cn } from "@/lib/utils";
-import { Pencil } from "lucide-react";
 import toast from "react-hot-toast";
+import { Pencil } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { formatPrice } from "@/lib/format";
 
 const formSchema = z.object({
-  categoryId: z.string().min(1, { message: "description is required" }),
+  price: z.coerce.number(),
 });
 
 interface IProps {
   initialData: Course;
   courseId: string;
-  options: { label: string; value: string }[];
 }
-const CategoryForm = ({ initialData, courseId, options }: IProps) => {
+const PriceForm = ({ initialData, courseId }: IProps) => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -41,7 +42,7 @@ const CategoryForm = ({ initialData, courseId, options }: IProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      categoryId: initialData.categoryId || "",
+      price: initialData.price || undefined,
     },
   });
 
@@ -51,39 +52,36 @@ const CategoryForm = ({ initialData, courseId, options }: IProps) => {
     try {
       const response = await axios.patch(`/api/courses/${courseId}`, values);
       toggleEdit();
-      toast.success("Category update successful");
+      toast.success("Price update Successful");
       router.refresh();
     } catch {
       toast.error("something went wrong.");
     }
   };
-
-  const selectedOption = options.find(
-    (option) => option.value === initialData.categoryId
-  );
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Category
+        Course price
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit Category
+              Edit price
             </>
           )}
         </Button>
       </div>
+
       {!isEditing && (
         <p
           className={cn(
             "text-sm mt-2",
-            !initialData.categoryId && "text-slate-500 italic"
+            !initialData.price && "text-slate-500 italic"
           )}
         >
-          {selectedOption?.label || "No category"}
+          {initialData.price ? formatPrice(initialData.price) : "No price"}
         </p>
       )}
       {isEditing && (
@@ -94,11 +92,18 @@ const CategoryForm = ({ initialData, courseId, options }: IProps) => {
           >
             <FormField
               control={form.control}
-              name="categoryId"
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Combobox options={options} {...field}/>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      disabled={isSubmitting}
+                      placeholder="Set a price for your course"
+                      {...field}
+                      className="bg-white"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -114,4 +119,4 @@ const CategoryForm = ({ initialData, courseId, options }: IProps) => {
   );
 };
 
-export default CategoryForm;
+export default PriceForm;
