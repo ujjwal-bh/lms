@@ -80,7 +80,7 @@ const AttachmentForm = ({ initialData, courseId }: IProps) => {
           <div className="space-y-4 py-2">
             {
                 initialData.attachments.map(attachment => (
-                    <div className="flex items-center w-full bg-primary/20 border text-primary rounded-md p-2">
+                    <div className="flex items-center w-full bg-primary/20 border text-primary rounded-md p-2" key={attachment.id}>
 
                         <File className="h-4 w-4 mr-2 flex-shrink-0"/>
                         <p className="text-xs line-clamp-1">
