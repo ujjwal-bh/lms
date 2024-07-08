@@ -31,5 +31,4 @@ export async function DELETE(
         console.log("[course id attachments", error);
         return new NextResponse("Internal server error", { status: 500 });
       }
-  return { kera: "kera" };
 }
