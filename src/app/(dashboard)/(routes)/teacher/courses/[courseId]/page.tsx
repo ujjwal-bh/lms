@@ -23,13 +23,14 @@ const CoursePage = async ({ params }: { params: { courseId: string } }) => {
   const { userId } = auth();
   if (!userId) redirect("/");
 
+  // 
   const course = await db.course.findUnique({
     where: {
       id: params.courseId,
       userId,
     },
     include: {
-      Chapters: {
+      chapters: {
         orderBy: {
           position: "asc",
         },
@@ -56,7 +57,7 @@ const CoursePage = async ({ params }: { params: { courseId: string } }) => {
     course.imageUrl,
     course.price,
     course.categoryId,
-    course.Chapters.some((chapter) => chapter.isPublished),
+    course.chapters.some((chapter) => chapter.isPublished),
   ];
 
   // console.log("cat", categories.map((category) => ({

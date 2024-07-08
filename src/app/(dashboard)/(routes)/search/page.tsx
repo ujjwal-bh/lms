@@ -1,8 +1,43 @@
 import React from 'react'
+import { db } from '@/lib/db'
+import Categories from './_components/Categories'
+import SearchInput from '@/components/SearchInput'
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
+import { getCourses } from '@/actions/get-courses'
+import CoursesList from '@/components/CoursesList'
 
-const SearchPage = () => {
+
+interface IProps {
+  searchParams: {
+    title: string,
+    categoryId: string
+  }
+}
+const SearchPage = async ({searchParams}: IProps) => {
+  const {userId} = auth()
+
+  if(!userId) return redirect("/")
+  const categories = await db.category.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  })
+  const courses = await getCourses({
+    userId,
+    ...searchParams
+  })
   return (
-    <div>SearchPage</div>
+    <>
+    <div className='px-6 pt-6 md:hidden md:mb-0 block'>
+      <SearchInput/>
+    </div>
+    <div className='p-6 space-y-4'>
+      <Categories items={categories}/>
+
+      <CoursesList items={courses}/>
+    </div>
+    </>
   )
 }
 

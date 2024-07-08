@@ -24,7 +24,7 @@ export async function PATCH(
               userId
             },
             include: {
-              Chapters:{
+              chapters:{
                 include: {
                   muxData: true
                 }

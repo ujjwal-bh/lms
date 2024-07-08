@@ -1,11 +1,8 @@
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import React from 'react'
-import { DataTable } from './_components/DataTable'
-import { columns } from './_components/Columns'
+import { db } from '@/lib/db'
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db'
+import { columns } from './_components/Columns'
+import { DataTable } from './_components/DataTable'
 
 const CoursesPage = async () => {
   const {userId} = auth()

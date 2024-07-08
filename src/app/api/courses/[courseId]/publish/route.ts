@@ -23,7 +23,7 @@ export async function PATCH(
         userId,
       },
       include: {
-        Chapters: {
+        chapters: {
           include: {
             muxData: true,
           },
@@ -33,7 +33,7 @@ export async function PATCH(
 
     if (!course) return new NextResponse("Not found", { status: 404 });
 
-    const hasPublishedChapter = course.Chapters.some(
+    const hasPublishedChapter = course.chapters.some(
       (chapter) => chapter.isPublished
     );
     if (

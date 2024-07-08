@@ -6,7 +6,7 @@ import ConfirmModal from "@/components/modals/ConfirmModal";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useConfettiStore } from "../../../../../../../../hooks/use-confetti-store";
+import { useConfettiStore } from "../../../../../../../hooks/use-confetti-store";
 
 interface IProps {
   disabled: boolean;

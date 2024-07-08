@@ -28,7 +28,7 @@ const formSchema = z.object({
 });
 
 interface IProps {
-  initialData: Course & { Chapters: Chapter[] };
+  initialData: Course & { chapters: Chapter[] };
   courseId: string;
 }
 const ChaptersForm = ({ initialData, courseId }: IProps) => {
@@ -37,7 +37,7 @@ const ChaptersForm = ({ initialData, courseId }: IProps) => {
   const [isUpdating, setIsUpdating] = useState(false);
 
 
-  console.log(initialData.Chapters, "chapterssssssss")
+  console.log(initialData.chapters, "chapterssssssss")
   const toggleCreating = () => {
     setIsCreating((prev) => !prev);
   };
@@ -137,16 +137,16 @@ const ChaptersForm = ({ initialData, courseId }: IProps) => {
         <div
           className={cn(
             "text-sm mt-2",
-            !initialData.Chapters.length && "text-slate-500 italic"
+            !initialData.chapters.length && "text-slate-500 italic"
           )}
         >
-          {!initialData.Chapters.length ? (
+          {!initialData.chapters.length ? (
             "No chapters"
           ) : (
             <ChaptersList
                 onEdit={onEdit}
                 onReorder={onReorder}
-                items={initialData.Chapters || []}
+                items={initialData.chapters || []}
 
             />
           )}
